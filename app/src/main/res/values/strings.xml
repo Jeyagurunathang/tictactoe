@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Tic Tac Toe</string>
+
+    <string name="player_symbol">Your Symbol</string>
+    <string name="player">You</string>
+    <string name="computer">AI</string>
+    <string name="primary_symbol">X</string>
+    <string name="secondary_symbol">O</string>
+    <string name="restart">Restart</string>
+    <string name="end_game">End Game</string>
+    <string name="game_pause">Game is paused!</string>
 </resources>
