@@ -34,23 +34,18 @@ fun TicTacToeGameScreen(
         ),
 //        verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        /*
-            Displaying the player symbol
-         */
+
+        // Displaying the player symbol
         DefinePlayerSymbol()
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        /*
-            Displaying the score of player and computer
-         */
+        // Displaying the score of player and computer
         ScoreSection()
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        /*
-            A Column which displays the game control buttons like "Restart" and "End Game"
-         */
+        // A Column which displays the game control buttons like "Restart" and "End Game"
         Column (
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
