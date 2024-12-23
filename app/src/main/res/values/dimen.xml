@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="border">1.dp</dimen>
     <dimen name="small">6.dp</dimen>
     <dimen name="medium">12.dp</dimen>
     <dimen name="large">16.dp</dimen>

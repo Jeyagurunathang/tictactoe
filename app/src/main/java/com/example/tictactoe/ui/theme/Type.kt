@@ -19,11 +19,19 @@ val nunitoSemiBold = FontFamily(
 val Typography = Typography(
     bodySmall = TextStyle(
         fontFamily = nunitoSemiBold,
-        fontSize = 20.sp
+        fontSize = 18.sp
     ),
     bodyLarge = TextStyle(
         fontFamily = nunitoBold,
+        fontSize = 24.sp
+    ),
+    labelLarge = TextStyle(
+        fontFamily = nunitoBold,
         fontSize = 20.sp
+    ),
+    labelMedium = TextStyle(
+        fontFamily = nunitoBold,
+        fontSize = 16.sp
     )
     /* Other default text styles to override
     titleLarge = TextStyle(
