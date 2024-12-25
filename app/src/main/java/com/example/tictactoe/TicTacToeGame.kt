@@ -45,6 +45,9 @@ fun TicTacToeGameScreen(
 
         Spacer(modifier = Modifier.height(50.dp))
 
+        // A composable which displays the main game grid cells
+        GameGridCells()
+
         // A Column which displays the game control buttons like "Restart" and "End Game"
         Column (
             modifier = Modifier.fillMaxWidth(),
