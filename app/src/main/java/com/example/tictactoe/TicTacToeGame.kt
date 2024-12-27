@@ -32,18 +32,18 @@ fun TicTacToeGameScreen(
                 )
             )
         ),
-//        verticalArrangement = Arrangement.SpaceEvenly
+        verticalArrangement = Arrangement.SpaceEvenly
     ) {
 
         // Displaying the player symbol
         DefinePlayerSymbol()
 
-        Spacer(modifier = Modifier.height(50.dp))
+//        Spacer(modifier = Modifier.height(50.dp))
 
         // Displaying the score of player and computer
         ScoreSection()
 
-        Spacer(modifier = Modifier.height(50.dp))
+//        Spacer(modifier = Modifier.height(50.dp))
 
         // A composable which displays the main game grid cells
         GameGridCells()
