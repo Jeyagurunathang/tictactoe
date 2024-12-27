@@ -20,28 +20,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tictactoe.state.TicTacToeState
 import com.example.tictactoe.ui.theme.TicTacToeTheme
+import com.example.tictactoe.viewmodel.TicTacToeViewModel
 
 @Composable
 fun GameGridCells(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    gameUiState: TicTacToeState
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
-//        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.medium)),
-//        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.medium)),
         contentPadding = PaddingValues(dimensionResource(R.dimen.extra_large))
     ) {
-        items(9) { box ->
+        items(gameUiState.gridBoxes.size) { box ->
             Box (
                 modifier = Modifier
-//                    .background(
-//                        color = MaterialTheme.colorScheme.onPrimary,
-//                        shape = MaterialTheme.shapes.medium
-//                    )
                     // 1st vertical line
                     .drawBehind {
-                        val borderSize = 3.dp.toPx()
+                        val borderSize = 5.dp.toPx()
                         drawLine(
                             color = when(box) {
                                 1, 3, 5, 7 -> Color.White
@@ -62,7 +60,7 @@ fun GameGridCells(
                     }
                     // 2nd vertical line
                     .drawBehind {
-                        val borderSize = 3.dp.toPx()
+                        val borderSize = 5.dp.toPx()
                         drawLine(
                             color = Color.White,
                             start = when(box) {
@@ -80,7 +78,7 @@ fun GameGridCells(
                     }
                     .border(
                         width = when (box) {
-                            4 -> 3.dp
+                            4 -> 5.dp
                             else -> 0.dp
                         },
                         color = when (box) {
@@ -88,24 +86,18 @@ fun GameGridCells(
                             else -> Color.Transparent
                         }
                     )
-                    .padding(dimensionResource(R.dimen.extra_large))
+//                    .padding(dimensionResource(R.dimen.extra_large))
                     .clickable {},
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = box.toString(),
-                    modifier = Modifier.padding(dimensionResource(R.dimen.extra_large)),
+                    text = gameUiState.gridBoxes[box].cellSymbol,
+                    modifier = Modifier.padding(
+                        dimensionResource(R.dimen.extra_large) + dimensionResource(R.dimen.extra_large)
+                    ),
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun GameGridCellsPreview() {
-    TicTacToeTheme {
-        GameGridCells()
     }
 }

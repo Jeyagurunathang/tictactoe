@@ -11,18 +11,24 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tictactoe.ui.theme.TicTacToeTheme
+import com.example.tictactoe.viewmodel.TicTacToeViewModel
 
 @Composable
 fun TicTacToeGameScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: TicTacToeViewModel = viewModel()
 ) {
+    val gameUiState by viewModel.ticTacToeState.collectAsState()
     Column (
         modifier = modifier.fillMaxSize().background(
             brush = Brush.linearGradient(
@@ -38,15 +44,11 @@ fun TicTacToeGameScreen(
         // Displaying the player symbol
         DefinePlayerSymbol()
 
-//        Spacer(modifier = Modifier.height(50.dp))
-
         // Displaying the score of player and computer
         ScoreSection()
 
-//        Spacer(modifier = Modifier.height(50.dp))
-
         // A composable which displays the main game grid cells
-        GameGridCells()
+        GameGridCells(gameUiState = gameUiState)
 
         // A Column which displays the game control buttons like "Restart" and "End Game"
         Column (
