@@ -32,7 +32,8 @@ fun GameGridCells(
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
-        contentPadding = PaddingValues(dimensionResource(R.dimen.extra_large))
+        contentPadding = PaddingValues(dimensionResource(R.dimen.extra_large)),
+        modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.extra_large))
     ) {
         items(gameUiState.gridBoxes.size) { box ->
             Box (

@@ -3,6 +3,7 @@ package com.example.tictactoe
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +27,7 @@ import com.example.tictactoe.viewmodel.TicTacToeViewModel
 @Composable
 fun TicTacToeGameScreen(
     modifier: Modifier = Modifier,
+    innerPadding: PaddingValues,
     viewModel: TicTacToeViewModel = viewModel()
 ) {
     val gameUiState by viewModel.ticTacToeState.collectAsState()
@@ -65,6 +67,6 @@ fun TicTacToeGameScreen(
 @Composable
 fun TicTacToeGameScreenPreview() {
     TicTacToeTheme {
-        TicTacToeGameScreen()
+        TicTacToeGameScreen(innerPadding = PaddingValues(dimensionResource(R.dimen.small)))
     }
 }
