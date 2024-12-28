@@ -10,9 +10,9 @@ data class TicTacToeState (
 )
 
 data class GridCell(
-    val cellSymbol: String = "",
-    val columnPosition: Int = 0,
-    val rowPosition: Int = 0
+    var cellSymbol: String = "",
+    var columnPosition: Int = 0,
+    var rowPosition: Int = 0
 )
 
 object XOGridLayout {

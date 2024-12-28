@@ -28,12 +28,12 @@ import com.example.tictactoe.viewmodel.TicTacToeViewModel
 @Composable
 fun GameGridCells(
     modifier: Modifier = Modifier,
+    gameViewModel: TicTacToeViewModel,
     gameUiState: TicTacToeState
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
-        contentPadding = PaddingValues(dimensionResource(R.dimen.extra_large)),
-        modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.extra_large))
+        contentPadding = PaddingValues(dimensionResource(R.dimen.large))
     ) {
         items(gameUiState.gridBoxes.size) { box ->
             Box (
@@ -88,11 +88,20 @@ fun GameGridCells(
                         }
                     )
 //                    .padding(dimensionResource(R.dimen.extra_large))
-                    .clickable {},
+                    .clickable { gameViewModel.updateGridCell(
+                        columnIndex = box,
+                        rowIndex = when(box) {
+                            0, 1, 2 -> 1
+                            3, 4, 6 -> 2
+                            6, 7, 8 -> 3
+                            else -> 0
+                        }
+                    ) },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = gameUiState.gridBoxes[box].cellSymbol,
+//                    text = box.toString(),
                     modifier = Modifier.padding(
                         dimensionResource(R.dimen.extra_large) + dimensionResource(R.dimen.extra_large)
                     ),
