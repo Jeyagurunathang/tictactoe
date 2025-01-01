@@ -7,9 +7,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -37,11 +40,7 @@ fun GameGridCells(
         contentPadding = PaddingValues(dimensionResource(R.dimen.large))
     ) {
         items(gameUiState.gridBoxes.size) { box ->
-            Text(
-                text = gameUiState.gridBoxes[box].cellSymbol,
-                style = MaterialTheme.typography.bodyLarge,
-                fontSize = 32.sp,
-                textAlign = TextAlign.Center,
+            Card (
                 modifier = Modifier
                     // 1st vertical line
                     .drawBehind {
@@ -92,8 +91,7 @@ fun GameGridCells(
                             else -> Color.Transparent
                         }
                     )
-                    .padding(dimensionResource(R.dimen.extra_large))
-//                    .padding(dimensionResource(R.dimen.medium))
+                    .padding(dimensionResource(R.dimen.medium))
                     .clickable {
                         gameViewModel.updateGridCell(
                             rowIndex = when(box) {
@@ -103,8 +101,18 @@ fun GameGridCells(
                             },
                             columnIndex = box
                         )
-                    }
-            )
+                    },
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.Transparent,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            ) {
+                Text(
+                    text = gameUiState.gridBoxes[box].cellSymbol,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(dimensionResource(R.dimen.large)).align(Alignment.CenterHorizontally)
+                )
+            }
         }
     }
 }

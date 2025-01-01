@@ -15,11 +15,19 @@ val nunitoSemiBold = FontFamily(
     Font(R.font.nunitosans_semibold)
 )
 
+val adlamDisplay = FontFamily(
+    Font(R.font.adlam_regular)
+)
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodySmall = TextStyle(
         fontFamily = nunitoSemiBold,
         fontSize = 18.sp
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = adlamDisplay,
+        fontSize = 44.sp
     ),
     bodyLarge = TextStyle(
         fontFamily = nunitoBold,
