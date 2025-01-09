@@ -13,12 +13,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import com.example.tictactoe.state.TicTacToeUiState
 
 @Composable
 fun ScoreSection(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    gameUiState: TicTacToeUiState
 ) {
     Row (
         modifier = Modifier.fillMaxWidth(),
@@ -28,7 +31,15 @@ fun ScoreSection(
         Text(
             text = stringResource(R.string.player),
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onPrimary
+            color = MaterialTheme.colorScheme.onPrimary,
+            modifier = if (gameUiState.isPlayersTurn) {
+                Modifier.background(
+                    color = Color.Blue,
+                    shape = MaterialTheme.shapes.small
+                ).padding(horizontal = dimensionResource(R.dimen.medium))
+            } else {
+                modifier
+            }
         )
 
         /*
@@ -67,7 +78,15 @@ fun ScoreSection(
         Text(
             text = stringResource(R.string.computer),
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onPrimary
+            color = MaterialTheme.colorScheme.onPrimary,
+            modifier = if (!gameUiState.isPlayersTurn) {
+                Modifier.background(
+                    color = Color.Red,
+                    shape = MaterialTheme.shapes.small
+                ).padding(horizontal = dimensionResource(R.dimen.medium))
+            } else {
+                modifier
+            }
         )
     }
 }

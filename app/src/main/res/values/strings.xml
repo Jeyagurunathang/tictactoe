@@ -9,4 +9,5 @@
     <string name="restart">Restart</string>
     <string name="end_game">End Game</string>
     <string name="game_pause">Game is paused!</string>
+    <string name="cannot_change_symbol">You cannot change the symbol once the game was started!</string>
 </resources>

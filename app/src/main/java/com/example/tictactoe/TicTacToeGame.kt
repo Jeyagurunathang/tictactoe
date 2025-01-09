@@ -48,10 +48,13 @@ fun TicTacToeGameScreen(
     ) {
 
         // Displaying the player symbol
-        DefinePlayerSymbol()
+        DefinePlayerSymbol(
+            gameViewModel = viewModel,
+            gameUiState = gameUiState
+        )
 
         // Displaying the score of player and computer
-        ScoreSection()
+        ScoreSection(gameUiState = gameUiState)
 
         // A composable which displays the main game grid cells
         GameGridCells(
