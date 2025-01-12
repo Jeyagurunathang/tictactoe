@@ -2,6 +2,7 @@ package com.example.tictactoe.state
 
 data class TicTacToeUiState (
     val playerSymbol: String = "X",
+    val aiSymbol: String = "O",
     val playerScore: Int = 0,
     val aiScore: Int = 0,
     val gridBoxes: List<GridCellUiState> = ListOfGrid.gridCells(),

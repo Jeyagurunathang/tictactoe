@@ -1,5 +1,6 @@
 package com.example.tictactoe.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.tictactoe.state.GridCellUiState
 import com.example.tictactoe.state.TicTacToeUiState
@@ -31,6 +32,8 @@ class TicTacToeViewModel : ViewModel() {
         }
 
         changingPlayersTurn()
+
+        if (!_ticTacToeUiState.value.isPlayersTurn) winningSequences()
     }
 
     // Function to set the player symbol to the particular clicked grid cell box
@@ -43,7 +46,7 @@ class TicTacToeViewModel : ViewModel() {
         currentState.gridBoxes.mapIndexed { index, gridCell ->
             if (index == colId) {
                 newGridList.add(gridCell.copy(
-                    cellSymbol = currentState.playerSymbol,
+                    cellSymbol = if (currentState.isPlayersTurn) currentState.playerSymbol else currentState.aiSymbol,
                     columnPosition = colId,
                     rowPosition = rowId
                 ))
@@ -96,11 +99,32 @@ class TicTacToeViewModel : ViewModel() {
         }
     }
 
-    // Function to make the AI place a symbol on the grid cell
+    // Function to store the players symbol positions
+    private fun getPlayerSymbolPosition(): Map<Int, List<GridCellUiState>> {
+        val gridBoxesWithPlayerSymbol = _ticTacToeUiState.value.gridBoxes.filter { it.cellSymbol == "X" }.groupBy { it.rowPosition }
+        Log.d(TAG, gridBoxesWithPlayerSymbol.toString())
 
+        return gridBoxesWithPlayerSymbol
+    }
 
-    // Function to get a random number between a defined range
-    private fun getRandomNumber(start: Int, end: Int): Int {
-        return (start..end).random()
+    // Function to find the winning sequences for the players move
+    private fun winningSequences() {
+        val playersWinningSequence = mutableMapOf<Int, List<List<Int>>>()
+        val playerSymbolGridBoxes = getPlayerSymbolPosition()
+        val rowPositionOfPlayerSymbol = playerSymbolGridBoxes.keys.toList().last()
+        val winningSequencesList = mutableListOf<List<Int>>()
+
+        val endingRowPositionRange = when(rowPositionOfPlayerSymbol) {
+            1 -> 2
+            2 -> 5
+            else -> 8
+        }
+
+        for (i in ((rowPositionOfPlayerSymbol - 1) * 3) ..endingRowPositionRange) {
+            winningSequencesList.add(listOf(rowPositionOfPlayerSymbol, i))
+        }
+
+        playersWinningSequence[rowPositionOfPlayerSymbol] = winningSequencesList
+        Log.d(TAG, playersWinningSequence.toString())
     }
 }
