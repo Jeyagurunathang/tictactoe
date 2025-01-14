@@ -109,22 +109,6 @@ class TicTacToeViewModel : ViewModel() {
 
     // Function to find the winning sequences for the players move
     private fun winningSequences() {
-        val playersWinningSequence = mutableMapOf<Int, List<List<Int>>>()
-        val playerSymbolGridBoxes = getPlayerSymbolPosition()
-        val rowPositionOfPlayerSymbol = playerSymbolGridBoxes.keys.toList().last()
-        val winningSequencesList = mutableListOf<List<Int>>()
 
-        val endingRowPositionRange = when(rowPositionOfPlayerSymbol) {
-            1 -> 2
-            2 -> 5
-            else -> 8
-        }
-
-        for (i in ((rowPositionOfPlayerSymbol - 1) * 3) ..endingRowPositionRange) {
-            winningSequencesList.add(listOf(rowPositionOfPlayerSymbol, i))
-        }
-
-        playersWinningSequence[rowPositionOfPlayerSymbol] = winningSequencesList
-        Log.d(TAG, playersWinningSequence.toString())
     }
 }
