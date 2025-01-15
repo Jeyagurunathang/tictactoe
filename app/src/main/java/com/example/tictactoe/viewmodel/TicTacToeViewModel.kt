@@ -2,6 +2,8 @@ package com.example.tictactoe.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.tictactoe.data.WinningSequencePosition
+import com.example.tictactoe.data.WinningSequences
 import com.example.tictactoe.state.GridCellUiState
 import com.example.tictactoe.state.TicTacToeUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +15,8 @@ private const val TAG = "Game viewmodel"
 
 class TicTacToeViewModel : ViewModel() {
     private val _ticTacToeUiState = MutableStateFlow(TicTacToeUiState())
+    private val playerSymbolPositions = mutableSetOf<WinningSequencePosition>()
+    private val playersWinningSequence = mutableSetOf<WinningSequencePosition>()
 
     val ticTacToeState: StateFlow<TicTacToeUiState> = _ticTacToeUiState.asStateFlow()
 
@@ -33,7 +37,7 @@ class TicTacToeViewModel : ViewModel() {
 
         changingPlayersTurn()
 
-        if (!_ticTacToeUiState.value.isPlayersTurn) winningSequences()
+        if (!_ticTacToeUiState.value.isPlayersTurn) updatePlayerSymbolPosition()
     }
 
     // Function to set the player symbol to the particular clicked grid cell box
@@ -100,15 +104,32 @@ class TicTacToeViewModel : ViewModel() {
     }
 
     // Function to store the players symbol positions
-    private fun getPlayerSymbolPosition(): Map<Int, List<GridCellUiState>> {
-        val gridBoxesWithPlayerSymbol = _ticTacToeUiState.value.gridBoxes.filter { it.cellSymbol == "X" }.groupBy { it.rowPosition }
-        Log.d(TAG, gridBoxesWithPlayerSymbol.toString())
+    private fun updatePlayerSymbolPosition() {
+        val gridsWithPlayerSymbol = _ticTacToeUiState.value.gridBoxes.filter { it.cellSymbol == "X" }
 
-        return gridBoxesWithPlayerSymbol
+        gridsWithPlayerSymbol.forEach {
+            playerSymbolPositions.add(WinningSequencePosition(rowId = it.rowPosition, colId = it.columnPosition))
+        }
+
+        predictPlayerWinningSequences()
     }
 
-    // Function to find the winning sequences for the players move
-    private fun winningSequences() {
+    // Function to get the players winning position based on the player's first move
+    private fun predictPlayerWinningSequences() {
+        val playersLastMove = playerSymbolPositions.last()
 
+        val winningSequences = WinningSequences.getWinningSequences()
+
+        for (winningSequence in winningSequences.values) {
+            if (playersLastMove in winningSequence) {
+                winningSequence.forEach {
+                    if (it != playersLastMove) playersWinningSequence.add(it)
+                }
+            }
+        }
+
+        playersWinningSequence.removeAll(playerSymbolPositions)
+
+        Log.d(TAG, playersWinningSequence.toString())
     }
 }

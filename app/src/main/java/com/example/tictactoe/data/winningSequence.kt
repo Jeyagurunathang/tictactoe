@@ -5,7 +5,7 @@ data class WinningSequencePosition(
     val colId: Int = 0
 )
 
-object winningSequences {
+object WinningSequences {
     fun getWinningSequences(): Map<Int, List<WinningSequencePosition>> {
         return mapOf(
             1 to listOf(WinningSequencePosition(1, 0), WinningSequencePosition(1, 1), WinningSequencePosition(1, 2)),
