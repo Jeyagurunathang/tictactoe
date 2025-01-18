@@ -2,14 +2,17 @@ package com.example.tictactoe.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.tictactoe.data.WinningSequencePosition
 import com.example.tictactoe.data.WinningSequences
 import com.example.tictactoe.state.GridCellUiState
 import com.example.tictactoe.state.TicTacToeUiState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 private const val TAG = "Game viewmodel"
 
@@ -17,6 +20,7 @@ class TicTacToeViewModel : ViewModel() {
     private val _ticTacToeUiState = MutableStateFlow(TicTacToeUiState())
     private val playerSymbolPositions = mutableSetOf<WinningSequencePosition>()
     private val playersWinningSequence = mutableSetOf<WinningSequencePosition>()
+    private val aiMovingSequence = mutableSetOf<WinningSequencePosition>()
 
     val ticTacToeState: StateFlow<TicTacToeUiState> = _ticTacToeUiState.asStateFlow()
 
@@ -120,8 +124,17 @@ class TicTacToeViewModel : ViewModel() {
 
         val winningSequences = WinningSequences.getWinningSequences()
 
+        /*
+
+            playersLastMove => contains the last movement of the player
+            winningSequence => It will contain all the possible winning sequences to win the game
+            aiMovingSequence => Initially it will contain nothing
+
+         */
+
+        Log.d(TAG, aiMovingSequence.toString())
         for (winningSequence in winningSequences.values) {
-            if (playersLastMove in winningSequence) {
+            if (playersLastMove in winningSequence && !winningSequence.any { it in aiMovingSequence }) {
                 winningSequence.forEach {
                     if (it != playersLastMove) playersWinningSequence.add(it)
                 }
@@ -130,6 +143,23 @@ class TicTacToeViewModel : ViewModel() {
 
         playersWinningSequence.removeAll(playerSymbolPositions)
 
+        aiTurn()
+        playersWinningSequence.removeAll(aiMovingSequence)
+
         Log.d(TAG, playersWinningSequence.toString())
+    }
+
+    // Function to make the AI the place its symbol
+    private fun aiTurn() {
+
+        viewModelScope.launch {
+            delay(1000)
+
+            aiMovingSequence.add(playersWinningSequence.random())
+
+            val (rowId, colId) = aiMovingSequence.last()
+
+            updateGridCell(rowIndex = rowId, columnIndex = colId)
+        }
     }
 }
