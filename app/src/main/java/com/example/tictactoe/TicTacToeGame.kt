@@ -68,7 +68,9 @@ fun TicTacToeGameScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            GameControlButton()
+            GameControlButton(
+                gameViewModel = viewModel
+            )
         }
     }
 }

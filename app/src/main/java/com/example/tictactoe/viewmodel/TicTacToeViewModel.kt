@@ -1,11 +1,14 @@
 package com.example.tictactoe.viewmodel
 
+import android.app.Activity
 import android.util.Log
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tictactoe.data.WinningSequencePosition
 import com.example.tictactoe.data.WinningSequences
 import com.example.tictactoe.state.GridCellUiState
+import com.example.tictactoe.state.ListOfGrid
 import com.example.tictactoe.state.TicTacToeUiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,19 +32,23 @@ class TicTacToeViewModel : ViewModel() {
         rowIndex: Int,
         columnIndex: Int
     ) {
-        _ticTacToeUiState.update { currentState ->
-            currentState.copy(
-                gridBoxes = updateGridBox(
-                    rowId = rowIndex,
-                    colId = columnIndex,
-                    currentState = currentState
+        val selectedGridCell = _ticTacToeUiState.value.gridBoxes.filter { it.rowPosition == rowIndex && it.columnPosition == columnIndex}
+
+        if ((selectedGridCell.isNotEmpty() && selectedGridCell.last().cellSymbol == "") || selectedGridCell.isEmpty()) {
+            _ticTacToeUiState.update { currentState ->
+                currentState.copy(
+                    gridBoxes = updateGridBox(
+                        rowId = rowIndex,
+                        colId = columnIndex,
+                        currentState = currentState
+                    )
                 )
-            )
+            }
+
+            changingPlayersTurn()
+
+            if (!_ticTacToeUiState.value.isPlayersTurn) updatePlayerSymbolPosition()
         }
-
-        changingPlayersTurn()
-
-        if (!_ticTacToeUiState.value.isPlayersTurn) updatePlayerSymbolPosition()
     }
 
     // Function to set the player symbol to the particular clicked grid cell box
@@ -95,7 +102,8 @@ class TicTacToeViewModel : ViewModel() {
     ) {
         _ticTacToeUiState.update { currentState ->
             currentState.copy(
-                playerSymbol = symbol
+                playerSymbol = symbol,
+                aiSymbol = if (symbol == "O") "X" else "O"
             )
         }
     }
@@ -109,7 +117,7 @@ class TicTacToeViewModel : ViewModel() {
 
     // Function to store the players symbol positions
     private fun updatePlayerSymbolPosition() {
-        val gridsWithPlayerSymbol = _ticTacToeUiState.value.gridBoxes.filter { it.cellSymbol == "X" }
+        val gridsWithPlayerSymbol = _ticTacToeUiState.value.gridBoxes.filter { it.cellSymbol == _ticTacToeUiState.value.playerSymbol }
 
         gridsWithPlayerSymbol.forEach {
             playerSymbolPositions.add(WinningSequencePosition(rowId = it.rowPosition, colId = it.columnPosition))
@@ -131,8 +139,6 @@ class TicTacToeViewModel : ViewModel() {
             aiMovingSequence => Initially it will contain nothing
 
          */
-
-        Log.d(TAG, aiMovingSequence.toString())
         for (winningSequence in winningSequences.values) {
             if (playersLastMove in winningSequence && !winningSequence.any { it in aiMovingSequence }) {
                 winningSequence.forEach {
@@ -160,6 +166,31 @@ class TicTacToeViewModel : ViewModel() {
             val (rowId, colId) = aiMovingSequence.last()
 
             updateGridCell(rowIndex = rowId, columnIndex = colId)
+        }
+    }
+
+    // Function to restart the game
+    fun restartGame() {
+        _ticTacToeUiState.update {
+            it.copy(
+                playerSymbol = "X",
+                aiSymbol= "O",
+                playerScore = 0,
+                aiScore = 0,
+                gridBoxes = ListOfGrid.gridCells(),
+                isRestart = false,
+                isEnd = false,
+                isDropDownClicked = false,
+                isTryToChangeSymbolAgain = false,
+                isPlayersTurn = true
+            )
+        }
+    }
+
+    // Function to end the game
+    fun endGame() {
+        _ticTacToeUiState.update {
+            it.copy(isEnd = true)
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.example.tictactoe
 
-import androidx.annotation.StringRes
+import android.app.Activity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,15 +12,20 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import com.example.tictactoe.viewmodel.TicTacToeViewModel
 
 @Composable
 fun GameControlButton(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    gameViewModel: TicTacToeViewModel
 ) {
+    val activity = LocalContext.current as Activity
+
     OutlinedButton(
-        onClick = {},
+        onClick = { gameViewModel.restartGame() },
         modifier = Modifier.fillMaxWidth(0.6F).padding(vertical = dimensionResource(R.dimen.medium)),
         shape = MaterialTheme.shapes.medium,
         colors = ButtonDefaults.outlinedButtonColors(
@@ -35,7 +40,10 @@ fun GameControlButton(
         )
     }
     Button(
-        onClick = {},
+        onClick = {
+            gameViewModel.endGame()
+            activity.finishAndRemoveTask()
+        },
         modifier = Modifier.fillMaxWidth(0.6F),
         shape = MaterialTheme.shapes.medium,
         colors = ButtonDefaults.buttonColors(
