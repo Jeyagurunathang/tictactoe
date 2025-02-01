@@ -41,7 +41,6 @@ fun GameControlButton(
     }
     Button(
         onClick = {
-            gameViewModel.endGame()
             activity.finishAndRemoveTask()
         },
         modifier = Modifier.fillMaxWidth(0.6F),

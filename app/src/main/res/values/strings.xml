@@ -3,11 +3,11 @@
 
     <string name="player_symbol">Your Symbol</string>
     <string name="player">You</string>
-    <string name="computer">AI</string>
+    <string name="computer">CPU</string>
     <string name="primary_symbol">X</string>
     <string name="secondary_symbol">O</string>
     <string name="restart">Restart</string>
     <string name="end_game">End Game</string>
-    <string name="game_pause">Game is paused!</string>
+    <string name="game_pause">Game is paused !</string>
     <string name="cannot_change_symbol">You cannot change the symbol once the game was started!</string>
 </resources>

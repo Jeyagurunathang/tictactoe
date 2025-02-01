@@ -1,8 +1,10 @@
 package com.example.tictactoe.viewmodel
 
-import android.app.Activity
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tictactoe.data.WinningSequencePosition
@@ -18,12 +20,18 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 private const val TAG = "Game viewmodel"
+private const val TAG1 = "playersposition"
+private const val TAG2 = "aipositions"
+private const val TAG3 = "winner"
+private const val TAG4 = "uistate"
 
 class TicTacToeViewModel : ViewModel() {
     private val _ticTacToeUiState = MutableStateFlow(TicTacToeUiState())
     private val playerSymbolPositions = mutableSetOf<WinningSequencePosition>()
     private val playersWinningSequence = mutableSetOf<WinningSequencePosition>()
     private val aiMovingSequence = mutableSetOf<WinningSequencePosition>()
+    private var playerScore by mutableIntStateOf(0)
+    private var aiScore by mutableIntStateOf(0)
 
     val ticTacToeState: StateFlow<TicTacToeUiState> = _ticTacToeUiState.asStateFlow()
 
@@ -149,10 +157,13 @@ class TicTacToeViewModel : ViewModel() {
 
         playersWinningSequence.removeAll(playerSymbolPositions)
 
+        if (playerSymbolPositions.size >= 3) whoIsWonTheGame()
         aiTurn()
         playersWinningSequence.removeAll(aiMovingSequence)
 
         Log.d(TAG, playersWinningSequence.toString())
+        Log.d(TAG1, playerSymbolPositions.toString())
+        Log.d(TAG2, aiMovingSequence.toString())
     }
 
     // Function to make the AI the place its symbol
@@ -169,6 +180,31 @@ class TicTacToeViewModel : ViewModel() {
         }
     }
 
+    // Function to predict who is won the game
+    private fun whoIsWonTheGame() {
+        for (winningSequence in WinningSequences.getWinningSequences()) {
+            if (winningSequence.value.containsAll(playerSymbolPositions)) {
+                Log.d(TAG3, "Player won the game")
+                playerScore.inc()
+                _ticTacToeUiState.update {
+                    it.copy(
+                        isGameCompleted = true,
+                        playerScore = it.playerScore.inc()
+                    )
+                }
+            } else if (winningSequence.value.containsAll(aiMovingSequence)) {
+                Log.d(TAG3, "AI won the game")
+                aiScore.inc()
+                _ticTacToeUiState.update {
+                    it.copy(
+                        isGameCompleted = true,
+                        aiScore = it.aiScore.inc()
+                    )
+                }
+            }
+        }
+    }
+
     // Function to restart the game
     fun restartGame() {
         _ticTacToeUiState.update {
@@ -179,18 +215,33 @@ class TicTacToeViewModel : ViewModel() {
                 aiScore = 0,
                 gridBoxes = ListOfGrid.gridCells(),
                 isRestart = false,
-                isEnd = false,
                 isDropDownClicked = false,
                 isTryToChangeSymbolAgain = false,
-                isPlayersTurn = true
+                isPlayersTurn = true,
+                isGameCompleted = false,
             )
         }
     }
 
-    // Function to end the game
-    fun endGame() {
+    // Function to restart the game
+    fun nextRound() {
+        playerSymbolPositions.removeAll(playerSymbolPositions)
+        aiMovingSequence.removeAll(aiMovingSequence)
+        playersWinningSequence.removeAll(playersWinningSequence)
+
         _ticTacToeUiState.update {
-            it.copy(isEnd = true)
+            it.copy(
+                playerSymbol = "X",
+                aiSymbol= "O",
+                gridBoxes = ListOfGrid.gridCells(),
+                isRestart = false,
+                isDropDownClicked = false,
+                isTryToChangeSymbolAgain = false,
+                isPlayersTurn = true,
+                isGameCompleted = false
+            )
         }
+
+        Log.d(TAG4, _ticTacToeUiState.value.toString())
     }
 }

@@ -57,7 +57,7 @@ fun ScoreSection(
             )
         ) {
             Text(
-                text = "0",
+                text = gameUiState.playerScore.toString(),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -69,7 +69,7 @@ fun ScoreSection(
             )
             Spacer(modifier = Modifier.width(dimensionResource(R.dimen.large)))
             Text(
-                text = "0",
+                text = gameUiState.aiScore.toString(),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary
             )
