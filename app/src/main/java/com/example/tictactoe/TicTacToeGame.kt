@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.safeGestures
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -51,15 +53,14 @@ fun TicTacToeGameScreen(
     val gameUiState by viewModel.ticTacToeState.collectAsState()
 
     Column (
-        modifier = modifier.fillMaxSize().background(
+        modifier = Modifier.fillMaxSize().background(
             brush = Brush.linearGradient(
                 colors = listOf(
                     MaterialTheme.colorScheme.secondary,
                     MaterialTheme.colorScheme.primary
                 )
             )
-        )
-            .windowInsetsPadding(WindowInsets.safeContent),
+        ),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
 

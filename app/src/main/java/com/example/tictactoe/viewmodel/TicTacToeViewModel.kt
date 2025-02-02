@@ -267,8 +267,6 @@ class TicTacToeViewModel : ViewModel() {
 
         _ticTacToeUiState.update {
             it.copy(
-                playerSymbol = "X",
-                aiSymbol= "O",
                 gridBoxes = ListOfGrid.gridCells(),
                 isRestart = false,
                 isDropDownClicked = false,

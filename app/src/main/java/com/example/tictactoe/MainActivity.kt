@@ -25,19 +25,4 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "Moved to background")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "Moved to foreground")
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "started")
-    }
 }
