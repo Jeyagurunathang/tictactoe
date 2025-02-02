@@ -49,7 +49,6 @@ fun TicTacToeGameScreen(
     viewModel: TicTacToeViewModel = viewModel()
 ) {
     val gameUiState by viewModel.ticTacToeState.collectAsState()
-    val lifecycleowner = LocalLifecycleOwner.current
 
     Column (
         modifier = modifier.fillMaxSize().background(
@@ -98,6 +97,12 @@ fun TicTacToeGameScreen(
 
         // A dialog box which is displayed when the app goes to background
         PauseDialog()
+
+        DrawDialogBox(
+            gameViewModel = viewModel,
+            gameUiState = gameUiState
+        )
+
     }
 }
 

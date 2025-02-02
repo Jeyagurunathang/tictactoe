@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import com.example.tictactoe.state.TicTacToeUiState
 import com.example.tictactoe.viewmodel.TicTacToeViewModel
@@ -51,7 +52,7 @@ fun WinningDialogBox(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 Text(
-                    text = "Player won the game",
+                    text = stringResource(R.string.game_winner, gameUiState.whoWon),
                     style = MaterialTheme.typography.labelLarge
                 )
                 OutlinedButton (
@@ -64,7 +65,7 @@ fun WinningDialogBox(
                     contentPadding = PaddingValues(dimensionResource(R.dimen.medium))
                 ) {
                     Text(
-                        text = "Next Game",
+                        text = stringResource(R.string.next_game),
                         style = MaterialTheme.typography.labelLarge
                     )
                 }
@@ -81,7 +82,7 @@ fun WinningDialogBox(
                     contentPadding = PaddingValues(dimensionResource(R.dimen.medium))
                 ) {
                     Text(
-                        text = "End Game",
+                        text = stringResource(R.string.end_game),
                         style = MaterialTheme.typography.labelLarge
                     )
                 }

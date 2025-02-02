@@ -10,7 +10,9 @@ data class TicTacToeUiState (
     val isDropDownClicked: Boolean = false,
     val isTryToChangeSymbolAgain: Boolean = false,
     val isPlayersTurn: Boolean = true,
-    val isGameCompleted: Boolean = false
+    val isGameCompleted: Boolean = false,
+    val whoWon: String = "",
+    val isDraw: Boolean = false
 )
 
 data class GridCellUiState(

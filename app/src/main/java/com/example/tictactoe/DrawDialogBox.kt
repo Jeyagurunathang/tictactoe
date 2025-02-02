@@ -15,46 +15,26 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
+import com.example.tictactoe.state.TicTacToeUiState
+import com.example.tictactoe.viewmodel.TicTacToeViewModel
 
 @Composable
-fun PauseDialog(
-    modifier: Modifier = Modifier
+fun DrawDialogBox(
+    modifier: Modifier = Modifier,
+    gameViewModel: TicTacToeViewModel,
+    gameUiState: TicTacToeUiState
 ) {
-    val lifeCycleOwner = LocalLifecycleOwner.current
     val activity = LocalContext.current as Activity
-    var showDialog by remember {mutableStateOf(false)}
 
-    DisposableEffect(lifeCycleOwner) {
-        val observer = LifecycleEventObserver {_, event ->
-            if (event == Lifecycle.Event.ON_PAUSE) {
-                showDialog = true
-            }
-        }
-
-        lifeCycleOwner.lifecycle.addObserver(observer)
-
-        onDispose {
-            lifeCycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
-
-    if (showDialog) {
+    if (gameUiState.isDraw) {
         Dialog(
-            onDismissRequest = { showDialog = false }
+            onDismissRequest = {gameViewModel.nextRound()}
         ) {
             Column (
                 modifier = Modifier
@@ -68,15 +48,15 @@ fun PauseDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "😪️",
+                    text = "😮",
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 Text(
-                    text = stringResource(R.string.game_pause),
+                    text = stringResource(R.string.game_draw),
                     style = MaterialTheme.typography.labelLarge
                 )
                 OutlinedButton (
-                    onClick = { activity.finishAndRemoveTask() },
+                    onClick = {gameViewModel.nextRound()},
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = MaterialTheme.colorScheme.primary
@@ -85,13 +65,16 @@ fun PauseDialog(
                     contentPadding = PaddingValues(dimensionResource(R.dimen.medium))
                 ) {
                     Text(
-                        text = stringResource(R.string.end_game),
+                        text = stringResource(R.string.next_game),
                         style = MaterialTheme.typography.labelLarge
                     )
                 }
                 Button(
-                    onClick = { showDialog = false },
+                    onClick = {
+                        activity.finishAndRemoveTask()
+                    },
                     modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.medium,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary
@@ -99,12 +82,11 @@ fun PauseDialog(
                     contentPadding = PaddingValues(dimensionResource(R.dimen.medium))
                 ) {
                     Text(
-                        text = stringResource(R.string.resume_game),
+                        text = stringResource(R.string.end_game),
                         style = MaterialTheme.typography.labelLarge
                     )
                 }
             }
         }
     }
-
 }

@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
 
 private const val TAG = "Game viewmodel"
 private const val TAG1 = "playersposition"
@@ -49,7 +50,8 @@ class TicTacToeViewModel : ViewModel() {
                         rowId = rowIndex,
                         colId = columnIndex,
                         currentState = currentState
-                    )
+                    ),
+                    isTryToChangeSymbolAgain = false
                 )
             }
 
@@ -158,12 +160,16 @@ class TicTacToeViewModel : ViewModel() {
         playersWinningSequence.removeAll(playerSymbolPositions)
 
         if (playerSymbolPositions.size >= 3) whoIsWonTheGame()
-        aiTurn()
-        playersWinningSequence.removeAll(aiMovingSequence)
 
-        Log.d(TAG, playersWinningSequence.toString())
-        Log.d(TAG1, playerSymbolPositions.toString())
-        Log.d(TAG2, aiMovingSequence.toString())
+        if (
+            !_ticTacToeUiState.value.isGameCompleted &&
+            _ticTacToeUiState.value.gridBoxes.any { it.cellSymbol == "" } &&
+            !_ticTacToeUiState.value.isDraw
+        ) {
+            aiTurn()
+        }
+
+        playersWinningSequence.removeAll(aiMovingSequence)
     }
 
     // Function to make the AI the place its symbol
@@ -171,6 +177,23 @@ class TicTacToeViewModel : ViewModel() {
 
         viewModelScope.launch {
             delay(1000)
+
+            if (playerSymbolPositions.size >= 2) {
+                for (winningSequence in WinningSequences.getWinningSequences()) {
+                    if (
+                        playerSymbolPositions.intersect(winningSequence.value.toSet()).size == 2 &&
+                        aiMovingSequence.intersect(winningSequence.value.toSet()).isEmpty()
+                    ) {
+                        aiMovingSequence.add(winningSequence.value.minus(playerSymbolPositions)[0])
+
+                        val (rowId, colId) = aiMovingSequence.last()
+
+                        updateGridCell(rowIndex = rowId, columnIndex = colId)
+
+                        return@launch
+                    }
+                }
+            }
 
             aiMovingSequence.add(playersWinningSequence.random())
 
@@ -183,25 +206,37 @@ class TicTacToeViewModel : ViewModel() {
     // Function to predict who is won the game
     private fun whoIsWonTheGame() {
         for (winningSequence in WinningSequences.getWinningSequences()) {
-            if (winningSequence.value.containsAll(playerSymbolPositions)) {
-                Log.d(TAG3, "Player won the game")
+            if (playerSymbolPositions.containsAll(winningSequence.value)) {
                 playerScore.inc()
                 _ticTacToeUiState.update {
                     it.copy(
                         isGameCompleted = true,
-                        playerScore = it.playerScore.inc()
+                        playerScore = it.playerScore.inc(),
+                        whoWon = "Player",
+                        isDraw = false
                     )
                 }
-            } else if (winningSequence.value.containsAll(aiMovingSequence)) {
-                Log.d(TAG3, "AI won the game")
+            } else if (aiMovingSequence.containsAll(winningSequence.value)) {
                 aiScore.inc()
                 _ticTacToeUiState.update {
                     it.copy(
                         isGameCompleted = true,
-                        aiScore = it.aiScore.inc()
+                        aiScore = it.aiScore.inc(),
+                        whoWon = "Computer",
+                        isDraw = false
                     )
                 }
             }
+        }
+
+        if (!_ticTacToeUiState.value.isGameCompleted && _ticTacToeUiState.value.gridBoxes.all{ it.cellSymbol != "" }) {
+            _ticTacToeUiState.update {
+                it.copy(
+                    isDraw = true
+                )
+            }
+
+            Log.d(TAG, _ticTacToeUiState.value.toString())
         }
     }
 
@@ -219,6 +254,7 @@ class TicTacToeViewModel : ViewModel() {
                 isTryToChangeSymbolAgain = false,
                 isPlayersTurn = true,
                 isGameCompleted = false,
+                isDraw = false
             )
         }
     }
@@ -238,7 +274,8 @@ class TicTacToeViewModel : ViewModel() {
                 isDropDownClicked = false,
                 isTryToChangeSymbolAgain = false,
                 isPlayersTurn = true,
-                isGameCompleted = false
+                isGameCompleted = false,
+                isDraw = false
             )
         }
 

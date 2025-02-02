@@ -7,7 +7,11 @@
     <string name="primary_symbol">X</string>
     <string name="secondary_symbol">O</string>
     <string name="restart">Restart</string>
+    <string name="resume_game">Resume</string>
+    <string name="next_game">Next Game</string>
     <string name="end_game">End Game</string>
     <string name="game_pause">Game is paused !</string>
+    <string name="game_draw">Game was draw !</string>
+    <string name="game_winner">%s Won the game</string>
     <string name="cannot_change_symbol">You cannot change the symbol once the game was started!</string>
 </resources>
